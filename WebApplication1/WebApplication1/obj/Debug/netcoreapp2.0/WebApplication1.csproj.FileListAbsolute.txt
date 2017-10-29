@@ -1,0 +1,22 @@
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.deps.json
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.json
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.dev.json
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.dll
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.pdb
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csproj.CoreCompileInputs.cache
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfoInputs.cache
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfo.cs
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.dll
+C:\Users\Azyro Fore\source\repos\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.pdb
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.deps.json
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.json
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.dev.json
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.dll
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.pdb
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csprojResolveAssemblyReference.cache
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csproj.CoreCompileInputs.cache
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfoInputs.cache
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfo.cs
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.dll
+C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.pdb
