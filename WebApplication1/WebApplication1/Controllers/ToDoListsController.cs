@@ -32,7 +32,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var toDoList = await _context.ToDoList
+            var toDoList = await _context.ToDoList.Include(t => t.ToDoItems)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (toDoList == null)
             {
