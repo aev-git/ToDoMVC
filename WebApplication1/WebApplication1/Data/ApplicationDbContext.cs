@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ToDoListWeb.Models;
 
-namespace WebApplication1.Models
+namespace ToDoListWeb.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -14,8 +10,8 @@ namespace WebApplication1.Models
         {
         }
 
-        public DbSet<WebApplication1.Models.ToDoList> ToDoList { get; set; }
+        public DbSet<ToDoList> ToDoList { get; set; }
 
-        public DbSet<WebApplication1.Models.ToDoItem> ToDoItem { get; set; }
+        public DbSet<ToDoItem> ToDoItem { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ToDoListWeb.Data;
 
-namespace WebApplication1.Models.Repositories
+namespace ToDoListWeb.Models.Repositories
 {
     interface ITodoListRepository
     {

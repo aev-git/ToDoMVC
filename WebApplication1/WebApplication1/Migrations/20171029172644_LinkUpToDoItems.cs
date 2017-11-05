@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
-namespace WebApplication1.Migrations
+namespace ToDoListWeb.Migrations
 {
     public partial class LinkUpToDoItems : Migration
     {

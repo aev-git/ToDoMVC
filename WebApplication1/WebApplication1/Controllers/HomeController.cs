@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
+using ToDoListWeb.Models;
 
-namespace WebApplication1.Controllers
+namespace ToDoListWeb.Controllers
 {
     public class HomeController : Controller
     {
