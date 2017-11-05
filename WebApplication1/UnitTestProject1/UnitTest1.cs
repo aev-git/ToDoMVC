@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTestProject1
+namespace ToDoListTests
 {
     [TestClass]
     public class UnitTest1

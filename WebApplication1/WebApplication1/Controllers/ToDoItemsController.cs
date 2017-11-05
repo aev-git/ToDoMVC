@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Models;
+using ToDoListWeb.Data;
+using ToDoListWeb.Models;
 
-namespace WebApplication1.Controllers
+namespace ToDoListWeb.Controllers
 {
     public class ToDoItemsController : Controller
     {

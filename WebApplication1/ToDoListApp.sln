@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{8722EAEB-942C-4B1A-B2CB-8A2729F17C02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListWeb", "WebApplication1\ToDoListWeb.csproj", "{8722EAEB-942C-4B1A-B2CB-8A2729F17C02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{030A75B9-6775-4162-B0F1-91245FA7FC50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListTests", "UnitTestProject1\ToDoListTests.csproj", "{030A75B9-6775-4162-B0F1-91245FA7FC50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models
+﻿namespace ToDoListWeb.Models
 {
     public class ToDoItem
     {
