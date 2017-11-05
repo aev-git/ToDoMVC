@@ -20,3 +20,14 @@ C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplic
 C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfo.cs
 C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.dll
 C:\Dev\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.pdb
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.deps.json
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.json
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.runtimeconfig.dev.json
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.dll
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\bin\Debug\netcoreapp2.0\WebApplication1.pdb
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csprojResolveAssemblyReference.cache
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.csproj.CoreCompileInputs.cache
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfoInputs.cache
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.AssemblyInfo.cs
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.dll
+c:\dev\mentoring\Anthony\ToDoMVC\WebApplication1\WebApplication1\obj\Debug\netcoreapp2.0\WebApplication1.pdb
