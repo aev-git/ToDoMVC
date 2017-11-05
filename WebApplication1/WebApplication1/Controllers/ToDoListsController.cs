@@ -6,22 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Models.Repositories;
 
 namespace WebApplication1.Controllers
 {
     public class ToDoListsController : Controller
     {
         private readonly ApplicationDbContext _context;
+	    private readonly ITodoListRepository _repository;
 
         public ToDoListsController(ApplicationDbContext context)
         {
             _context = context;
+	        _repository = new TodoListRepository(context);
         }
 
         // GET: ToDoLists
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ToDoList.ToListAsync());
+			return View(await _repository.GetToDoLists());
         }
 
         // GET: ToDoLists/Details/5
