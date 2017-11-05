@@ -13124,11 +13124,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "c:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "C:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
       "projectName": "WebApplication1",
-      "projectPath": "c:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectPath": "C:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
       "packagesPath": "C:\\Users\\Luc\\.nuget\\packages\\",
-      "outputPath": "c:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\obj\\",
+      "outputPath": "C:\\dev\\mentoring\\Anthony\\ToDoMVC\\WebApplication1\\WebApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

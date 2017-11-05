@@ -12,12 +12,10 @@ namespace WebApplication1.Controllers
 {
     public class ToDoListsController : Controller
     {
-        private readonly ApplicationDbContext _context;
 	    private readonly ITodoListRepository _repository;
 
         public ToDoListsController(ApplicationDbContext context)
         {
-            _context = context;
 	        _repository = new TodoListRepository(context);
         }
 
@@ -35,8 +33,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var toDoList = await _context.ToDoList.Include(t => t.ToDoItems)
-                .SingleOrDefaultAsync(m => m.Id == id);
+	        var toDoList = await _repository.GetToDoList(id.Value);
             if (toDoList == null)
             {
                 return NotFound();
@@ -60,8 +57,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(toDoList);
-                await _context.SaveChangesAsync();
+	            await _repository.AddToDoList(toDoList);
                 return RedirectToAction(nameof(Index));
             }
             return View(toDoList);
@@ -75,7 +71,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var toDoList = await _context.ToDoList.SingleOrDefaultAsync(m => m.Id == id);
+            var toDoList = await _repository.GetToDoList(id.Value);
             if (toDoList == null)
             {
                 return NotFound();
@@ -99,12 +95,11 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    _context.Update(toDoList);
-                    await _context.SaveChangesAsync();
+	                await _repository.UpdateToDoList(toDoList);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ToDoListExists(toDoList.Id))
+                    if (!await ToDoListExistsAsync(toDoList.Id))
                     {
                         return NotFound();
                     }
@@ -126,8 +121,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var toDoList = await _context.ToDoList
-                .SingleOrDefaultAsync(m => m.Id == id);
+	        var toDoList = await _repository.GetToDoList(id.Value);
             if (toDoList == null)
             {
                 return NotFound();
@@ -141,15 +135,20 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var toDoList = await _context.ToDoList.SingleOrDefaultAsync(m => m.Id == id);
-            _context.ToDoList.Remove(toDoList);
-            await _context.SaveChangesAsync();
+	        var toDoList = await _repository.DeleteToDoList(id);
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task<bool> ToDoListExistsAsync(int id)
+        {
+            return (await _repository.GetToDoLists()).Any(e => e.Id == id);
+        }
+
+/*
         private bool ToDoListExists(int id)
         {
-            return _context.ToDoList.Any(e => e.Id == id);
+            return Task.Run(async () => await _repository.GetToDoLists()).Result.Any(e => e.Id == id);
         }
+*/
     }
 }

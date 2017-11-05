@@ -34,22 +34,27 @@ namespace WebApplication1.Models.Repositories
 
 		public async Task<ToDoList> GetToDoList(int id)
 		{
-			throw new NotImplementedException();
+			return await _db.ToDoList.Include(t => t.ToDoItems).SingleOrDefaultAsync(m => m.Id == id);
 		}
 
 		public async Task AddToDoList(ToDoList model)
 		{
-			throw new NotImplementedException();
+			_db.Add(model);
+			await _db.SaveChangesAsync();
 		}
 
 		public async Task UpdateToDoList(ToDoList model)
 		{
-			throw new NotImplementedException();
+			_db.Update(model);
+			await _db.SaveChangesAsync();
 		}
 
 		public async Task<ToDoList> DeleteToDoList(int id)
 		{
-			throw new NotImplementedException();
+			var todoList = await GetToDoList(id);
+            _db.ToDoList.Remove(todoList);
+            await _db.SaveChangesAsync();
+			return todoList;
 		}
 	}
 }
