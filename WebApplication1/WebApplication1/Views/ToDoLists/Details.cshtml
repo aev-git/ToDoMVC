@@ -1,25 +1,14 @@
 ﻿@model ToDoListWeb.Models.ToDoList
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Name;
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>ToDoList</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
+<div class="pull-right">
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </div>
+<h2>@Model.Name <small>Items</small></h2>
+
 @Html.Partial("_ToDoItems", Model.ToDoItems)
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

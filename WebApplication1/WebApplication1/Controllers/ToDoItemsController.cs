@@ -114,7 +114,7 @@ namespace ToDoListWeb.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "ToDoLists", new{id = toDoItem.ToDoListId});
             }
             ViewData["ToDoListId"] = new SelectList(_context.ToDoList, "Id", "Id", toDoItem.ToDoListId);
             return View(toDoItem);
