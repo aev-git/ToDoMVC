@@ -33,3 +33,9 @@
         display: none;
     }
 }
+.completed {
+    font-style: italic;
+    text-decoration: line-through;
+    color: gray;
+    
+}
