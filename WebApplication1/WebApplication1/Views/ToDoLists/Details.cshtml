@@ -21,13 +21,22 @@
                 <table class="table table-condensed">
 
                     <tbody data-bind="foreach: items">
-                        <tr>
-                            <td style="width: 20px;">
-                                <input type="checkbox" data-bind="checked: isDone" />
-                            </td>
-                            <td data-bind="css: {completed: isDone}, text: memo"></td>
-                        </tr>
+                    <tr>
+                        <td style="width: 20px;">
+                            <input type="checkbox" data-bind="checked: isDone" />
+                        </td>
+                        <td data-bind="css: {completed: isDone}">
+                            <input class="form-control" data-bind="value:memo"/>
+                        </td>
+                    </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <button data-bind="click: addItem">Add</button>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -45,7 +54,11 @@
             this.isDone = ko.observable();
             var self = this;
             this.isDone.subscribe(function(value) {
-                self.host.postData(self.id, value);
+                self.host.postData(self.id, self.memo(), value);
+
+            });
+            this.memo.subscribe(function(value) {
+                self.host.postData(self.id, value, self.isDone());
             });
         }
 
@@ -55,10 +68,11 @@
             this.items = ko.observableArray([]);
             this.saved = function() {
                 alert("saved");
-
             };
-
-            this.postData = function(id, isDone) {
+            this.addItem = function() {
+                this.items.push(new TodoItem(this, 0));
+            };
+            this.postData = function(id, memo, isDone) {
                 if (this.ignore)
                     return;
 
@@ -69,6 +83,7 @@
                     url: '@Url.Action("Save", "TodoItems")',
                     data: {
                         id: id,
+                        memo: memo,
                         isDone: isDone
                     },
                     success: function() {
@@ -93,3 +108,4 @@
 
     </script>
 }
+

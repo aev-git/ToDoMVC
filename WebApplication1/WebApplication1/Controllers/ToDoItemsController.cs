@@ -151,10 +151,9 @@ namespace ToDoListWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(int id, bool isDone)
+        public async Task<IActionResult> Save(ToDoItem item)
         {
-            var item = await _context.ToDoItem.SingleOrDefaultAsync(i => i.Id == id);
-            item.IsDone = isDone;
+            _context.Entry(item).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return Ok(true);
         }
