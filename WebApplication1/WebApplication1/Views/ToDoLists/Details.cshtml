@@ -25,18 +25,16 @@
         <th></th>
     </tr>
     </thead>
-    <tbody>
-    @foreach (var item in Model.ToDoItems.OrderBy(i => i.IsDone))
-    {
+    <tbody data-bind="foreach: items">
         <tr>
-            <td class="@(item.IsDone ? "completed" : "")">
-                @Html.DisplayFor(modelItem => item.Memo)
+            <td data-bind="css: {completed: isDone}, text: memo">
+               
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsDone)
+                 <input type="checkbox" data-bind="checked: isDone"/>
             </td>
 
-            <td>
+           @* <td>
                 <a asp-controller="ToDoItems" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-xs" title="Edit">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
@@ -46,9 +44,8 @@
                 <a asp-controller="ToDoItems" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs" title="Delete">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
-            </td>
+            </td>*@
         </tr>
-    }
     </tbody>
 </table>
 
@@ -67,17 +64,17 @@
 		}
 
 		function ViewModel() {
-			var data = {
-				name: ko.observable('@Model.Name'),
-				items: ko.observableArray([])
-			};
+		    this.name = ko.observable('@Model.Name');
+            this.items = ko.observableArray([]);
+
 			@foreach (var item in Model.ToDoItems)
 			{
 				@:var item = new TodoItem();
 				@:item.memo('@item.Memo');
-				@:item.isDone(@item.IsDone);
+				@:item.isDone(@item.IsDone.ToString().ToLower());
 
-				@:data.items.push(item);
+				@:this.items.push(item);
+
 			}
 
 			this.isDone = ko.observable();
