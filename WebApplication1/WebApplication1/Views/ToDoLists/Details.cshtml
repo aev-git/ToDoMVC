@@ -4,7 +4,6 @@
     ViewData["Title"] = Model.Name;
 }
 <div class="pull-right">
-	<a data-bind="click: sayHello" class="btn btn-warning">Knockout Works</a>
 	<a asp-action="Index" class="btn btn-default">Back to List</a>
 	<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
 	<a asp-action="Create" class="btn btn-primary">Create New</a>
@@ -13,13 +12,19 @@
 
 @Html.Partial("_ToDoItems", Model.ToDoItems)
 
+<button data-bind="click: toggleIsDone">Click Me</button>
+<h1 class="page-header">
+	<span data-bind="css: { completed: isDone }">Take out the dog!</span> 
+</h1>
+
 @section Scripts
 {
 	<script type="text/javascript">
-		
+
 		function ViewModel() {
-			this.sayHello = function() {
-				alert("It works!");
+			this.isDone = ko.observable();
+			this.toggleIsDone = function() {
+				this.isDone(!this.isDone());
 			}
 		}
 
