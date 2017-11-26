@@ -26,15 +26,15 @@
     </tr>
     </thead>
     <tbody data-bind="foreach: items">
-        <tr>
-            <td data-bind="css: {completed: isDone}, text: memo">
+    <tr>
+        <td data-bind="css: {completed: isDone}, text: memo">
                
-            </td>
-            <td>
-                 <input type="checkbox" data-bind="checked: isDone"/>
-            </td>
+        </td>
+        <td>
+            <input type="checkbox" data-bind="checked: isDone"/>
+        </td>
 
-           @* <td>
+        @* <td>
                 <a asp-controller="ToDoItems" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-xs" title="Edit">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
@@ -45,14 +45,10 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
             </td>*@
-        </tr>
+    </tr>
     </tbody>
 </table>
-
-<button data-bind="click: toggleIsDone">Click Me</button>
-<h1 class="page-header">
-	<span data-bind="css: { completed: isDone }">Take out the dog!</span> 
-</h1>
+<button data-bind="click: postData">Click Me</button>
 
 @section Scripts
 {
@@ -66,6 +62,21 @@
 		function ViewModel() {
 		    this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
+		    this.saved = function() {
+		        alert("saved");
+            };
+
+		    this.postData = function() {
+                var self = this;
+		        $.ajax({
+		            type: "post",
+		            dataType: "JSON",
+		            url: '@Url.Action("Save", "TodoItems")',
+		            success: function() {
+		                self.saved();
+		            }
+		    });
+		    };
 
 			@foreach (var item in Model.ToDoItems)
 			{
@@ -75,11 +86,6 @@
 
 				@:this.items.push(item);
 
-			}
-
-			this.isDone = ko.observable();
-			this.toggleIsDone = function() {
-				this.isDone(!this.isDone());
 			}
 		}
 
