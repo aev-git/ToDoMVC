@@ -54,19 +54,31 @@
 {
 	<script type="text/javascript">
 
-		function TodoItem() {
+        function TodoItem(host, id) {
+            this.host = host;
+            this.id = id;
 			this.memo = ko.observable();
-			this.isDone = ko.observable();
-		}
+            this.isDone = ko.observable();
+            var self = this;
+            this.isDone.subscribe(function(value) {
+                self.host.postData(self.id, value);
+            });
+        }
 
-		function ViewModel() {
+        function ViewModel() {
+            this.ignore = true;
 		    this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
 		    this.saved = function() {
-		        alert("saved");
+                alert("saved");
+            
             };
 
-		    this.postData = function() {
+            this.postData = function (id, isDone) {
+                if (this.ignore)
+                    return;
+                alert(id.toString() + isDone.toString());
+		        return;
                 var self = this;
 		        $.ajax({
 		            type: "post",
@@ -75,19 +87,20 @@
 		            success: function() {
 		                self.saved();
 		            }
-		    });
+                });
 		    };
 
 			@foreach (var item in Model.ToDoItems)
 			{
-				@:var item = new TodoItem();
+				@:var item = new TodoItem(this, @item.Id);
 				@:item.memo('@item.Memo');
 				@:item.isDone(@item.IsDone.ToString().ToLower());
 
 				@:this.items.push(item);
 
 			}
-		}
+            this.ignore = false;
+        }
 
 		ko.applyBindings(new ViewModel());
 
