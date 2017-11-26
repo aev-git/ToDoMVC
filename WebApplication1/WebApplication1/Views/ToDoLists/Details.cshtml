@@ -1,7 +1,9 @@
-﻿@model ToDoListWeb.Models.ToDoList
+﻿@using ToDoListWeb.Models
+@model ToDoListWeb.Models.ToDoList
 
 @{
     ViewData["Title"] = Model.Name;
+    var m = new ToDoItem();
 }
 <div class="pull-right">
 	<a asp-action="Index" class="btn btn-default">Back to List</a>
@@ -10,7 +12,45 @@
 </div>
 <h2>@Model.Name <small>Items</small></h2>
 
-@Html.Partial("_ToDoItems", Model.ToDoItems)
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => m.Memo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => m.IsDone)
+        </th>
+
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ToDoItems.OrderBy(i => i.IsDone))
+    {
+        <tr>
+            <td class="@(item.IsDone ? "completed" : "")">
+                @Html.DisplayFor(modelItem => item.Memo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDone)
+            </td>
+
+            <td>
+                <a asp-controller="ToDoItems" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-xs" title="Edit">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <a asp-controller="ToDoItems" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-xs" title="Details">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </a>
+                <a asp-controller="ToDoItems" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs" title="Delete">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
 
 <button data-bind="click: toggleIsDone">Click Me</button>
 <h1 class="page-header">
