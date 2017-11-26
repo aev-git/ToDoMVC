@@ -61,7 +61,25 @@
 {
 	<script type="text/javascript">
 
+		function TodoItem() {
+			this.memo = ko.observable();
+			this.isDone = ko.observable();
+		}
+
 		function ViewModel() {
+			var data = {
+				name: ko.observable('@Model.Name'),
+				items: ko.observableArray([])
+			};
+			@foreach (var item in Model.ToDoItems)
+			{
+				@:var item = new TodoItem();
+				@:item.memo('@item.Memo');
+				@:item.isDone(@item.IsDone);
+
+				@:data.items.push(item);
+			}
+
 			this.isDone = ko.observable();
 			this.toggleIsDone = function() {
 				this.isDone(!this.isDone());
