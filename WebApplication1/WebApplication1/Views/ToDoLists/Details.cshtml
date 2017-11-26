@@ -52,12 +52,12 @@
 
 @section Scripts
 {
-	<script type="text/javascript">
+    <script type="text/javascript">
 
         function TodoItem(host, id) {
             this.host = host;
             this.id = id;
-			this.memo = ko.observable();
+            this.memo = ko.observable();
             this.isDone = ko.observable();
             var self = this;
             this.isDone.subscribe(function(value) {
@@ -67,42 +67,45 @@
 
         function ViewModel() {
             this.ignore = true;
-		    this.name = ko.observable('@Model.Name');
+            this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
-		    this.saved = function() {
+            this.saved = function() {
                 alert("saved");
-            
+
             };
 
-            this.postData = function (id, isDone) {
+            this.postData = function(id, isDone) {
                 if (this.ignore)
                     return;
-                alert(id.toString() + isDone.toString());
-		        return;
+
                 var self = this;
-		        $.ajax({
-		            type: "post",
-		            dataType: "JSON",
-		            url: '@Url.Action("Save", "TodoItems")',
-		            success: function() {
-		                self.saved();
-		            }
+                $.ajax({
+                    type: "post",
+                    dataType: "JSON",
+                    url: '@Url.Action("Save", "TodoItems")',
+                    data: {
+                        id: id,
+                        isDone: isDone
+                    },
+                    success: function() {
+                        self.saved();
+                    }
                 });
-		    };
+            };
 
-			@foreach (var item in Model.ToDoItems)
-			{
-				@:var item = new TodoItem(this, @item.Id);
-				@:item.memo('@item.Memo');
-				@:item.isDone(@item.IsDone.ToString().ToLower());
+            @foreach (var item in Model.ToDoItems)
+            {
+                @:var item = new TodoItem(this, @item.Id);
+                @:item.memo('@item.Memo');
+                @:item.isDone(@item.IsDone.ToString().ToLower());
 
-				@:this.items.push(item);
+                @:this.items.push(item);
 
-			}
+            }
             this.ignore = false;
         }
 
-		ko.applyBindings(new ViewModel());
+        ko.applyBindings(new ViewModel());
 
-	</script>
+    </script>
 }
