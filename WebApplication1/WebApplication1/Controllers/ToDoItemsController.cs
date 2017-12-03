@@ -153,7 +153,7 @@ namespace ToDoListWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Save(ToDoItem item)
         {
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Update(item);
             await _context.SaveChangesAsync();
             return Ok(true);
         }
