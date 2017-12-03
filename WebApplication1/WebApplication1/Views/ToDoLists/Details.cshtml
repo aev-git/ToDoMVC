@@ -1,34 +1,115 @@
-﻿@model ToDoListWeb.Models.ToDoList
+﻿@using ToDoListWeb.Models
+@model ToDoListWeb.Models.ToDoList
 
 @{
     ViewData["Title"] = Model.Name;
+    var m = new ToDoItem();
 }
-<div class="pull-right">
-	<a asp-action="Index" class="btn btn-default">Back to List</a>
-	<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
-	<a asp-action="Create" class="btn btn-primary">Create New</a>
+
+<div class="row">
+    <div class="col-md-2 col-md-push-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">@Model.Name</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+
+                    <tbody data-bind="foreach: items">
+                        <tr>
+                            <td style="width: 20px;">
+                                <input type="checkbox" data-bind="checked: isDone" />
+                            </td>
+                            <td data-bind="css: {completed: isDone}">
+                                <input class="form-control" data-bind="value:memo" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <button data-bind="click: addItem">Add</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<h2>@Model.Name <small>Items</small></h2>
-
-@Html.Partial("_ToDoItems", Model.ToDoItems)
-
-<button data-bind="click: toggleIsDone">Click Me</button>
-<h1 class="page-header">
-	<span data-bind="css: { completed: isDone }">Take out the dog!</span> 
-</h1>
+<div class="pull-right">
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</div>
 
 @section Scripts
-{
-	<script type="text/javascript">
+    {
+    <script type="text/javascript">
 
-		function ViewModel() {
-			this.isDone = ko.observable();
-			this.toggleIsDone = function() {
-				this.isDone(!this.isDone());
-			}
-		}
+        function TodoItem(host, id) {
+			this.host = host;
+	        this.todoListId = host.id;
+            this.id = id;
+            this.memo = ko.observable();
+            this.isDone = ko.observable();
+            var self = this;
+            this.isDone.subscribe(function(value) {
+                self.isDone(value);
+                self.host.postData(self);
+            });
+            this.memo.subscribe(function (value) {
+                self.memo(value);
+                self.host.postData(self);
 
-		ko.applyBindings(new ViewModel());
+            });
+        }
 
-	</script>
+        function ViewModel() {
+			this.ignore = true;
+			this.id = @Model.Id;
+            this.name = ko.observable('@Model.Name');
+            this.items = ko.observableArray([]);
+            this.addItem = function() {
+                this.items.push(new TodoItem(this, 0));
+            };
+            this.postData = function(item) {
+                if (this.ignore)
+                    return;
+
+                var self = this;
+                $.ajax({
+                    type: "post",
+                    dataType: "JSON",
+                    url: '@Url.Action("Save", "TodoItems")',
+                    data: {
+						id: item.id,
+						todoListId: self.id,
+                        memo: item.memo(),
+                        isDone: item.isDone()
+                    },
+                    success: function (response) {
+                        debugger;
+                        self.id = response;
+                    }
+                });
+            };
+
+            @foreach (var item in Model.ToDoItems)
+            {
+                @:var item = new TodoItem(this, @item.Id);
+				@:item.todoListId = @item.ToDoListId;
+                @:item.memo('@item.Memo');
+                @:item.isDone(@item.IsDone.ToString().ToLower());
+
+                @:this.items.push(item);
+
+            }
+            this.ignore = false;
+        }
+
+        ko.applyBindings(new ViewModel());
+
+    </script>
 }
+

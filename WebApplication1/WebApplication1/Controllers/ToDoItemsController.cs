@@ -150,6 +150,21 @@ namespace ToDoListWeb.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Save(ToDoItem item)
+        {
+            if (item.Id > 0)
+            {
+                _context.Update(item);
+            }
+            else
+            {
+                _context.ToDoItem.Add(item);
+            }
+            
+            await _context.SaveChangesAsync();
+            return Ok(item.Id);
+        }
         private bool ToDoItemExists(int id)
         {
             return _context.ToDoItem.Any(e => e.Id == id);
