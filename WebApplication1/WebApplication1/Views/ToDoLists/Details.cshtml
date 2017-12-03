@@ -6,84 +6,106 @@
     var m = new ToDoItem();
 }
 <div class="pull-right">
-	<a asp-action="Index" class="btn btn-default">Back to List</a>
-	<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
-	<a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </div>
-<h2>@Model.Name <small>Items</small></h2>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => m.Memo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => m.IsDone)
-        </th>
+<div class="row">
+    <div class="col-md-2 col-md-push-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">@Model.Name</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
 
-        <th></th>
-    </tr>
-    </thead>
-    <tbody data-bind="foreach: items">
-        <tr>
-            <td data-bind="css: {completed: isDone}, text: memo">
-               
-            </td>
-            <td>
-                 <input type="checkbox" data-bind="checked: isDone"/>
-            </td>
-
-           @* <td>
-                <a asp-controller="ToDoItems" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-xs" title="Edit">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                <a asp-controller="ToDoItems" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-xs" title="Details">
-                    <span class="glyphicon glyphicon-list-alt"></span>
-                </a>
-                <a asp-controller="ToDoItems" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs" title="Delete">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-            </td>*@
-        </tr>
-    </tbody>
-</table>
-
-<button data-bind="click: toggleIsDone">Click Me</button>
-<h1 class="page-header">
-	<span data-bind="css: { completed: isDone }">Take out the dog!</span> 
-</h1>
+                    <tbody data-bind="foreach: items">
+                    <tr>
+                        <td style="width: 20px;">
+                            <input type="checkbox" data-bind="checked: isDone" />
+                        </td>
+                        <td data-bind="css: {completed: isDone}">
+                            <input class="form-control" data-bind="value:memo"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <button data-bind="click: addItem">Add</button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts
-{
-	<script type="text/javascript">
+    {
+    <script type="text/javascript">
 
-		function TodoItem() {
-			this.memo = ko.observable();
-			this.isDone = ko.observable();
-		}
+        function TodoItem(host, id) {
+            this.host = host;
+            this.id = id;
+            this.memo = ko.observable();
+            this.isDone = ko.observable();
+            var self = this;
+            this.isDone.subscribe(function(value) {
+                self.host.postData(self.id, self.memo(), value);
 
-		function ViewModel() {
-		    this.name = ko.observable('@Model.Name');
+            });
+            this.memo.subscribe(function(value) {
+                self.host.postData(self.id, value, self.isDone());
+            });
+        }
+
+        function ViewModel() {
+            this.ignore = true;
+            this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
+            this.saved = function() {
+                alert("saved");
+            };
+            this.addItem = function() {
+                this.items.push(new TodoItem(this, 0));
+            };
+            this.postData = function(id, memo, isDone) {
+                if (this.ignore)
+                    return;
 
-			@foreach (var item in Model.ToDoItems)
-			{
-				@:var item = new TodoItem();
-				@:item.memo('@item.Memo');
-				@:item.isDone(@item.IsDone.ToString().ToLower());
+                var self = this;
+                $.ajax({
+                    type: "post",
+                    dataType: "JSON",
+                    url: '@Url.Action("Save", "TodoItems")',
+                    data: {
+                        id: id,
+                        memo: memo,
+                        isDone: isDone
+                    },
+                    success: function() {
+                        self.saved();
+                    }
+                });
+            };
 
-				@:this.items.push(item);
+            @foreach (var item in Model.ToDoItems)
+            {
+                @:var item = new TodoItem(this, @item.Id);
+                @:item.memo('@item.Memo');
+                @:item.isDone(@item.IsDone.ToString().ToLower());
 
-			}
+                @:this.items.push(item);
 
-			this.isDone = ko.observable();
-			this.toggleIsDone = function() {
-				this.isDone(!this.isDone());
-			}
-		}
+            }
+            this.ignore = false;
+        }
 
-		ko.applyBindings(new ViewModel());
+        ko.applyBindings(new ViewModel());
 
-	</script>
+    </script>
 }
+
