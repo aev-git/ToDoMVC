@@ -109,7 +109,6 @@
                         isDone: item.isDone()
                     },
                     success: function (response) {
-                        debugger;
                         self.id = response;
                     }
                 });
@@ -122,7 +121,7 @@
             this.lists = ko.observableArray([]);
             @foreach (var list in Model)
             {
-                @:var list = new TodoList(self);
+                @:var list = new TodoList(self, @list.Id);
                 @:list.name('@list.Name');
                 foreach (var item in list.ToDoItems)
                 {
