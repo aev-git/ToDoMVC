@@ -153,9 +153,17 @@ namespace ToDoListWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Save(ToDoItem item)
         {
-            _context.Update(item);
+            if (item.Id > 0)
+            {
+                _context.Update(item);
+            }
+            else
+            {
+                _context.ToDoItem.Add(item);
+            }
+            
             await _context.SaveChangesAsync();
-            return Ok(true);
+            return Ok(item.Id);
         }
         private bool ToDoItemExists(int id)
         {

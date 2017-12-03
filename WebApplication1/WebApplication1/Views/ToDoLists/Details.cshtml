@@ -5,11 +5,6 @@
     ViewData["Title"] = Model.Name;
     var m = new ToDoItem();
 }
-<div class="pull-right">
-    <a asp-action="Index" class="btn btn-default">Back to List</a>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</div>
 
 <div class="row">
     <div class="col-md-2 col-md-push-5">
@@ -42,6 +37,11 @@
         </div>
     </div>
 </div>
+<div class="pull-right">
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</div>
 
 @section Scripts
     {
@@ -55,11 +55,13 @@
             this.isDone = ko.observable();
             var self = this;
             this.isDone.subscribe(function(value) {
-                self.host.postData(self.id, self.memo(), value);
-
+                self.isDone(value);
+                self.host.postData(self);
             });
-            this.memo.subscribe(function(value) {
-                self.host.postData(self.id, value, self.isDone());
+            this.memo.subscribe(function (value) {
+                self.memo(value);
+                self.host.postData(self);
+
             });
         }
 
@@ -74,7 +76,7 @@
             this.addItem = function() {
                 this.items.push(new TodoItem(this, 0));
             };
-            this.postData = function(id, memo, isDone) {
+            this.postData = function(item) {
                 if (this.ignore)
                     return;
 
@@ -84,12 +86,14 @@
                     dataType: "JSON",
                     url: '@Url.Action("Save", "TodoItems")',
                     data: {
-						id: id,
+						id: item.id,
 						todoListId: self.id,
-                        memo: memo,
-                        isDone: isDone
+                        memo: item.memo(),
+                        isDone: item.isDone()
                     },
-                    success: function() {
+                    success: function (response) {
+                        debugger;
+                        self.id = response;
                         self.saved();
                     }
                 });
