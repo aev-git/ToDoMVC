@@ -3,7 +3,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<div class="pull-right">
+    <button class ="btn btn-success" data-bind="click: addList">Add New List</button>
+</div>
 <h2>Index</h2>
 
 <div class="row">
@@ -22,7 +24,8 @@
                                 <input type="checkbox" data-bind="checked: isDone" />
                             </td>
                             <td data-bind="css: {completed: isDone}">
-                                <input class="form-control" data-bind="value:memo" />
+                                <div data-bind ="text:memo, visible:!isEditMode(), click:toggleEditMode"></div>
+                                <input class="form-control" data-bind="value:memo, visible: isEditMode"/>
                             </td>
                         </tr>
                     </tbody>
@@ -39,31 +42,6 @@
     </div>
     <!-- /ko -->
 </div>
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
 @section Scripts
     {
     <script type="text/javascript">
@@ -71,6 +49,10 @@
             this.host = host;
             this.todoListId = host.id;
             this.id = id;
+            this.isEditMode = ko.observable(false);
+            this.toggleEditMode = function() {
+                this.isEditMode(!this.isEditMode());
+            };
             this.memo = ko.observable();
             this.isDone = ko.observable();
             var self = this;
@@ -81,6 +63,7 @@
             this.memo.subscribe(function (value) {
                 self.memo(value);
                 self.host.postData(self);
+                self.isEditMode(false);
 
             });
         }
@@ -119,6 +102,33 @@
             var self = this;
             this.ignore = true;
             this.lists = ko.observableArray([]);
+            this.addList = function () {
+                var name = prompt("Enter a name for the list: ");
+                if (name.length === 0)
+                    return;
+
+                var newList = new TodoList(this, 0);
+                newList.name(name);
+                this.postData(newList);
+                this.lists.push(newList);
+            };
+            this.postData = function(list) {
+                if (list.host.ignore)
+                    return;
+
+               $.ajax({
+                        type: "post",
+                        dataType: "JSON",
+                        url: '@Url.Action("Save", "TodoLists")',
+                        data: {
+                            id: list.id,
+                            name: list.name()
+                },
+                    success: function (response) {
+                        list.id = response;
+                    }
+                });
+            };
             @foreach (var list in Model)
             {
                 @:var list = new TodoList(self, @list.Id);

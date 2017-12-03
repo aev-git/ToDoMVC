@@ -142,11 +142,24 @@ namespace ToDoListWeb.Controllers
             return (await _repository.GetToDoLists()).Any(e => e.Id == id);
         }
 
-/*
-        private bool ToDoListExists(int id)
+        /*
+                private bool ToDoListExists(int id)
+                {
+                    return Task.Run(async () => await _repository.GetToDoLists()).Result.Any(e => e.Id == id);
+                }
+        */
+        [HttpPost]
+        public async Task<IActionResult> Save(ToDoList list)
         {
-            return Task.Run(async () => await _repository.GetToDoLists()).Result.Any(e => e.Id == id);
+            if (list.Id > 0)
+            {
+                await _repository.UpdateToDoList(list);
+            }
+            else
+            {
+                await _repository.AddToDoList(list);
+            }
+            return Ok(list.Id);
         }
-*/
     }
 }
