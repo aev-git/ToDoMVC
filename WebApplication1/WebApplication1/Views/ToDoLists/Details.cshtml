@@ -16,21 +16,21 @@
                 <table class="table table-condensed">
 
                     <tbody data-bind="foreach: items">
-                    <tr>
-                        <td style="width: 20px;">
-                            <input type="checkbox" data-bind="checked: isDone" />
-                        </td>
-                        <td data-bind="css: {completed: isDone}">
-                            <input class="form-control" data-bind="value:memo"/>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                <input type="checkbox" data-bind="checked: isDone" />
+                            </td>
+                            <td data-bind="css: {completed: isDone}">
+                                <input class="form-control" data-bind="value:memo" />
+                            </td>
+                        </tr>
                     </tbody>
                     <tfoot>
-                    <tr>
-                        <td colspan="2">
-                            <button data-bind="click: addItem">Add</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button data-bind="click: addItem">Add</button>
+                            </td>
+                        </tr>
                     </tfoot>
                 </table>
             </div>
@@ -70,9 +70,6 @@
 			this.id = @Model.Id;
             this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
-            this.saved = function() {
-                alert("saved");
-            };
             this.addItem = function() {
                 this.items.push(new TodoItem(this, 0));
             };
@@ -94,7 +91,6 @@
                     success: function (response) {
                         debugger;
                         self.id = response;
-                        self.saved();
                     }
                 });
             };
