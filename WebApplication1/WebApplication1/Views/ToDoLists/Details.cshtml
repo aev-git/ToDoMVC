@@ -48,7 +48,8 @@
     <script type="text/javascript">
 
         function TodoItem(host, id) {
-            this.host = host;
+			this.host = host;
+	        this.todoListId = host.id;
             this.id = id;
             this.memo = ko.observable();
             this.isDone = ko.observable();
@@ -63,7 +64,8 @@
         }
 
         function ViewModel() {
-            this.ignore = true;
+			this.ignore = true;
+			this.id = @Model.Id;
             this.name = ko.observable('@Model.Name');
             this.items = ko.observableArray([]);
             this.saved = function() {
@@ -82,7 +84,8 @@
                     dataType: "JSON",
                     url: '@Url.Action("Save", "TodoItems")',
                     data: {
-                        id: id,
+						id: id,
+						todoListId: self.id,
                         memo: memo,
                         isDone: isDone
                     },
@@ -95,6 +98,7 @@
             @foreach (var item in Model.ToDoItems)
             {
                 @:var item = new TodoItem(this, @item.Id);
+				@:item.todoListId = @item.ToDoListId;
                 @:item.memo('@item.Memo');
                 @:item.isDone(@item.IsDone.ToString().ToLower());
 
