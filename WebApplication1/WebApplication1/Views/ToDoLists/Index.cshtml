@@ -25,7 +25,7 @@
                             </td>
                             <td data-bind="css: {completed: isDone}">
                                 <div data-bind ="text:memo, visible:!isEditMode(), click:toggleEditMode"></div>
-                                <input class="form-control" data-bind="value:memo, visible: isEditMode"/>
+                                <input class="form-control" data-bind="value:memo, visible: isEditMode, event:{blur: editModeOff}"/>
                             </td>
                         </tr>
                     </tbody>
@@ -43,7 +43,7 @@
     <!-- /ko -->
 </div>
 @section Scripts
-    {
+{
     <script type="text/javascript">
         function TodoItem(host, id) {
             this.host = host;
@@ -60,12 +60,15 @@
                 self.isDone(value);
                 self.host.postData(self);
             });
-            this.memo.subscribe(function (value) {
+            this.memo.subscribe(function(value) {
                 self.memo(value);
                 self.host.postData(self);
-                self.isEditMode(false);
-
+                self.editModeOff();
             });
+            this.editModeOff = function() {
+                self.isEditMode(false);
+            };
+
         }
 
         function TodoList(host, id) {
@@ -91,18 +94,19 @@
                         memo: item.memo(),
                         isDone: item.isDone()
                     },
-                    success: function (response) {
+                    success: function(response) {
                         self.id = response;
                     }
                 });
             };
 
         }
+
         function ViewModel() {
             var self = this;
             this.ignore = true;
             this.lists = ko.observableArray([]);
-            this.addList = function () {
+            this.addList = function() {
                 var name = prompt("Enter a name for the list: ");
                 if (name.length === 0)
                     return;
@@ -116,15 +120,15 @@
                 if (list.host.ignore)
                     return;
 
-               $.ajax({
-                        type: "post",
-                        dataType: "JSON",
-                        url: '@Url.Action("Save", "TodoLists")',
-                        data: {
-                            id: list.id,
-                            name: list.name()
-                },
-                    success: function (response) {
+                $.ajax({
+                    type: "post",
+                    dataType: "JSON",
+                    url: '@Url.Action("Save", "TodoLists")',
+                    data: {
+                        id: list.id,
+                        name: list.name()
+                    },
+                    success: function(response) {
                         list.id = response;
                     }
                 });
@@ -136,7 +140,7 @@
                 foreach (var item in list.ToDoItems)
                 {
                     @:var item = new TodoItem(list, @item.Id);
-				    @:item.todoListId = @item.ToDoListId;
+                    @:item.todoListId = @item.ToDoListId;
                     @:item.memo('@item.Memo');
                     @:item.isDone(@item.IsDone.ToString().ToLower());
 
@@ -148,6 +152,7 @@
             }
             this.ignore = false;
         }
+
         ko.applyBindings(new ViewModel());
     </script>
 }
