@@ -6,43 +6,139 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-    <button data-bind="click: hello">clickMe</button>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="row">
+    <!-- ko foreach: lists -->
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title" data-bind="text: name"></h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+
+                    <tbody data-bind="foreach: items">
+                        <tr>
+                            <td style="width: 20px;">
+                                <input type="checkbox" data-bind="checked: isDone" />
+                            </td>
+                            <td data-bind="css: {completed: isDone}">
+                                <input class="form-control" data-bind="value:memo" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <button data-bind="click: addItem">Add</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+@*<table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
 @section Scripts
     {
     <script type="text/javascript">
-        /*var vm = {
-            hello: function() {
-                alert("hello");
+        function TodoItem(host, id) {
+            this.host = host;
+            this.todoListId = host.id;
+            this.id = id;
+            this.memo = ko.observable();
+            this.isDone = ko.observable();
+            var self = this;
+            this.isDone.subscribe(function(value) {
+                self.isDone(value);
+                self.host.postData(self);
+            });
+            this.memo.subscribe(function (value) {
+                self.memo(value);
+                self.host.postData(self);
+
+            });
+        }
+
+        function TodoList(host, id) {
+            this.host = host;
+            this.id = id;
+            this.name = ko.observable();
+            this.items = ko.observableArray([]);
+            this.addItem = function() {
+                this.items.push(new TodoItem(this, 0));
+            };
+            this.postData = function(item) {
+                if (this.host.ignore)
+                    return;
+
+                var self = this;
+                $.ajax({
+                    type: "post",
+                    dataType: "JSON",
+                    url: '@Url.Action("Save", "TodoItems")',
+                    data: {
+                        id: item.id,
+                        todoListId: self.id,
+                        memo: item.memo(),
+                        isDone: item.isDone()
+                    },
+                    success: function (response) {
+                        debugger;
+                        self.id = response;
+                    }
+                });
+            };
+
+        }
+        function ViewModel() {
+            var self = this;
+            this.ignore = true;
+            this.lists = ko.observableArray([]);
+            @foreach (var list in Model)
+            {
+                @:var list = new TodoList(self);
+                @:list.name('@list.Name');
+                foreach (var item in list.ToDoItems)
+                {
+                    @:var item = new TodoItem(list, @item.Id);
+				    @:item.todoListId = @item.ToDoListId;
+                    @:item.memo('@item.Memo');
+                    @:item.isDone(@item.IsDone.ToString().ToLower());
+
+                    @:list.items.push(item);
+
+
+                }
+                @:this.lists.push(list);
             }
-        };
-        ko.applyBindings(vm);*/
+            this.ignore = false;
+        }
+        ko.applyBindings(new ViewModel());
     </script>
 }

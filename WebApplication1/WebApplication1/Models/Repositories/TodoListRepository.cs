@@ -20,12 +20,12 @@ namespace ToDoListWeb.Models.Repositories
 
 		public async Task<IEnumerable<ToDoList>> GetToDoLists()
 		{
-			return await EntityFrameworkQueryableExtensions.ToListAsync<ToDoList>(_db.ToDoList);
+			return await _db.ToDoList.Include(t => t.ToDoItems).ToListAsync();
 		}
 
 		public async Task<ToDoList> GetToDoList(int id)
 		{
-			return await EntityFrameworkQueryableExtensions.Include<ToDoList, ICollection<ToDoItem>>(_db.ToDoList, t => t.ToDoItems).SingleOrDefaultAsync(m => m.Id == id);
+			return await _db.ToDoList.Include(t => t.ToDoItems).SingleOrDefaultAsync(m => m.Id == id);
 		}
 
 		public async Task AddToDoList(ToDoList model)

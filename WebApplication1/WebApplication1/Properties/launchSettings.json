@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:50270/ToDoLists/Details/1",
+      "launchUrl": "http://localhost:50270/ToDoLists/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
