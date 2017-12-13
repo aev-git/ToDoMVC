@@ -133,8 +133,8 @@ namespace ToDoListWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-	        var toDoList = await _repository.DeleteToDoList(id);
-            return RedirectToAction(nameof(Index));
+	        var todoList = await _repository.DeleteToDoList(id);
+	        return Ok(todoList);
         }
 
         private async Task<bool> ToDoListExistsAsync(int id)
