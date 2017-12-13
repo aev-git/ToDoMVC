@@ -24,8 +24,8 @@
                                 <input type="checkbox" data-bind="checked: isDone" />
                             </td>
                             <td data-bind="css: {completed: isDone}">
-                                <div data-bind ="text:memo, visible:!isEditMode(), click:toggleEditMode"></div>
-                                <input class="form-control" data-bind="value:memo, visible: isEditMode, event:{blur: editModeOff}"/>
+                                <div data-bind ="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
+                                <input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}"/>
                             </td>
                         </tr>
                     </tbody>
@@ -55,7 +55,8 @@
             };
             this.memo = ko.observable();
             this.isDone = ko.observable();
-            var self = this;
+			var self = this;
+
             this.isDone.subscribe(function(value) {
                 self.isDone(value);
                 self.host.postData(self);
@@ -67,7 +68,10 @@
             });
             this.editModeOff = function() {
                 self.isEditMode(false);
-            };
+			};
+			this.showTextbox = ko.pureComputed(function() {
+				return self.isEditMode() || self.memo() == undefined || self.memo() === "";
+			});
 
         }
 
