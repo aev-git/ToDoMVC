@@ -9,32 +9,54 @@
 <h2>Index</h2>
 
 <div class="row">
+	<div data-bind="visible: lists().length == 0">
+		<div class="jumbotron">
+			<h1 class="lead">
+				No Todos
+				<span class="glyphicon glyphicon-thumbs-up"></span>
+			</h1>
+			<p>
+				You have no todo lists.
+			</p>
+			<p>
+				<button class="btn btn-primary btn-lg" data-bind="click: addList">
+					<span class="glyphicon glyphicon-plus"></span> Create One!
+				</button>
+			</p>
+		</div>
+	</div>
 	<!-- ko foreach: lists -->
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
+				<button data-bind="click: $parent.removeList" class="pull-right btn btn-xs btn-link">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
 				<h2 class="panel-title" data-bind="text: name"></h2>
 			</div>
 			<div class="panel-body">
 				<table class="table table-condensed">
 
 					<tbody data-bind="foreach: items">
-						<tr>
-							<td style="width: 20px;">
-								<input type="checkbox" data-bind="checked: isDone" />
-							</td>
-							<td data-bind="css: {completed: isDone}">
-								<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
-								<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}" />
-							</td>
-						</tr>
+					<tr>
+						<td style="width: 20px;">
+							<input type="checkbox" data-bind="checked: isDone"/>
+						</td>
+						<td data-bind="css: {completed: isDone}">
+							<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
+							<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}"/>
+						</td>
+					</tr>
 					</tbody>
 					<tfoot>
-						<tr>
-							<td colspan="2">
-								<button data-bind="click: addItem">Add</button>
-							</td>
-						</tr>
+					<tr>
+						<td colspan="2">
+							<button data-bind="click: addItem">Add</button>
+						</td>
+					</tr>
 					</tfoot>
 				</table>
 			</div>
@@ -43,120 +65,134 @@
 	<!-- /ko -->
 </div>
 @section Scripts
-	{
+{
 	<script type="text/javascript">
-        function TodoItem(host, id) {
-            this.host = host;
-            this.todoListId = host.id;
-            this.id = id;
-            this.isEditMode = ko.observable(false);
-            this.toggleEditMode = function() {
-                this.isEditMode(!this.isEditMode());
-            };
-            this.memo = ko.observable();
-            this.isDone = ko.observable();
+		function TodoItem(host, id) {
 			var self = this;
+			this.host = host;
+			this.todoListId = host.id;
+			this.id = id;
+			this.isEditMode = ko.observable(false);
+			this.toggleEditMode = function() {
+				self.isEditMode(!self.isEditMode());
+			};
+			this.memo = ko.observable();
+			this.isDone = ko.observable();
 
-            this.isDone.subscribe(function(value) {
-                self.isDone(value);
-                self.host.postData(self);
-            });
-            this.memo.subscribe(function(value) {
-                self.memo(value);
-                self.host.postData(self);
-                self.editModeOff();
-            });
-            this.editModeOff = function() {
-                self.isEditMode(false);
+			this.isDone.subscribe(function(value) {
+				self.isDone(value);
+				self.host.postData(self);
+			});
+			this.memo.subscribe(function(value) {
+				self.memo(value);
+				self.host.postData(self);
+				self.editModeOff();
+			});
+			this.editModeOff = function() {
+				self.isEditMode(false);
 			};
 			this.showTextbox = ko.pureComputed(function() {
 				return self.isEditMode() || self.memo() == undefined || self.memo() === "";
 			});
 
-        }
+		}
 
-        function TodoList(host, id) {
-            this.host = host;
-            this.id = id;
-            this.name = ko.observable();
-            this.items = ko.observableArray([]);
-            this.addItem = function() {
-                this.items.push(new TodoItem(this, 0));
-            };
-            this.postData = function(item) {
-                if (this.host.ignore)
-                    return;
+		function TodoList(host, id) {
+			var self = this;
+			this.host = host;
+			this.id = id;
+			this.name = ko.observable();
+			this.items = ko.observableArray([]);
+			this.addItem = function() {
+				self.items.push(new TodoItem(self, 0));
+			};
 
-                var self = this;
-                $.ajax({
-                    type: "post",
-                    dataType: "JSON",
-                    url: '@Url.Action("Save", "TodoItems")',
-                    data: {
-                        id: item.id,
-                        todoListId: self.id,
-                        memo: item.memo(),
-                        isDone: item.isDone()
-                    },
-                    success: function(response) {
-                        self.id = response;
-                    }
-                });
-            };
+			this.removeItem = function(todoItem) {
+				if (confirm("Are you sure you want to remove this item?")) {
+					self.items.remove(todoItem);
+				}
+				return;
 
-        }
+							};
+			this.postData = function(item) {
+				if (self.host.ignore)
+					return;
 
-        function ViewModel() {
-            var self = this;
-            this.ignore = true;
-            this.lists = ko.observableArray([]);
-            this.addList = function() {
-                var name = prompt("Enter a name for the list: ");
-                if (name.length === 0)
-                    return;
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Save", "TodoItems")',
+					data: {
+						id: item.id,
+						todoListId: self.id,
+						memo: item.memo(),
+						isDone: item.isDone()
+					},
+					success: function(response) {
+						self.id = response;
+					}
+				});
+			};
 
-                var newList = new TodoList(this, 0);
-                newList.name(name);
-                this.postData(newList);
-                this.lists.push(newList);
-            };
-            this.postData = function(list) {
-                if (list.host.ignore)
-                    return;
+		}
 
-                $.ajax({
-                    type: "post",
-                    dataType: "JSON",
-                    url: '@Url.Action("Save", "TodoLists")',
-                    data: {
-                        id: list.id,
-                        name: list.name()
-                    },
-                    success: function(response) {
-                        list.id = response;
-                    }
-                });
-            };
-            @foreach (var list in Model)
-            {
-                @:var list = new TodoList(self, @list.Id);
-                @:list.name('@list.Name');
-                foreach (var item in list.ToDoItems)
-                {
-                    @:var item = new TodoItem(list, @item.Id);
-                    @:item.todoListId = @item.ToDoListId;
-                    @:item.memo('@item.Memo');
-                    @:item.isDone(@item.IsDone.ToString().ToLower());
+		function ViewModel() {
+			var self = this;
+			this.ignore = true;
+			this.lists = ko.observableArray([]);
+			this.removeList = function(todoList) {
+				if (confirm("Are you sure you want to remove this list?")) {
+					self.lists.remove(todoList);
+				}
+				return;
+			};
+			this.addList = function() {
+				var name = prompt("Enter a name for the list: ");
+				if (name.length === 0)
+					return;
 
-                    @:list.items.push(item);
+				var newList = new TodoList(this, 0);
+				newList.name(name);
+				this.postData(newList);
+				this.lists.push(newList);
+			};
+			this.postData = function(list) {
+				if (list.host.ignore)
+					return;
+
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Save", "TodoLists")',
+					data: {
+						id: list.id,
+						name: list.name()
+					},
+					success: function(response) {
+						list.id = response;
+					}
+				});
+			};
+			@foreach (var list in Model)
+			{
+				@:var list = new TodoList(self, @list.Id);
+				@:list.name('@list.Name');
+				foreach (var item in list.ToDoItems)
+				{
+					@:var item = new TodoItem(list, @item.Id);
+					@:item.todoListId = @item.ToDoListId;
+					@:item.memo('@item.Memo');
+					@:item.isDone(@item.IsDone.ToString().ToLower());
+
+					@:list.items.push(item);
 
 
-                }
-                @:this.lists.push(list);
-            }
-            this.ignore = false;
-        }
+				}
+				@:this.lists.push(list);
+			}
+			this.ignore = false;
+		}
 
-        ko.applyBindings(new ViewModel());
+		ko.applyBindings(new ViewModel());
 	</script>
 }
