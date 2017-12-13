@@ -35,7 +35,8 @@ namespace ToDoListWeb
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -46,6 +47,13 @@ namespace ToDoListWeb
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+			var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+	        using (var scope = serviceScope.CreateScope())
+	        {
+				var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+				context.Database.Migrate();
+	        }
         }
     }
 }

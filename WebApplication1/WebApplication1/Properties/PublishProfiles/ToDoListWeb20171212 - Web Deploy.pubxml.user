@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAZ7dbJ4wTVU+4lKaDZiOIWQAAAAACAAAAAAAQZgAAAAEAACAAAADmzGeQmIS+xQRNl/TTb+NnhJdvCfZ46rmXFc5M7c7DBwAAAAAOgAAAAAIAACAAAAAwq1lXIwtiglGesGaLDrsD4KvHtJ55yb+pM49fhG21ZIAAAAC/K+RffnS04CJaZscFP78jlThfx147qb38iXvj2PZb8xJ2Mp9w06XAsC+2QpqESZ1CUkq4IhYTT1iBJuJudntKLBLDcLt8IcJ2D7bNYu1BKV200X2uFObUaJqO9Xe45plxwUpFtoFl0sa/1PDAae6dROOkJLaQggIi9iOcGi0QvEAAAAC8shy/Nx7UH9X55FSf4s/gMYYmbpASaQ0OEGRcG5wTe8GLVUS2x7a23fxQzYSvSmCPCxx9Sno8rtQDA+YqViwZ</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="ApplicationDbContext">
+      <Value>Data Source=tcp:todolistweb20171212db.database.windows.net,1433;Initial Catalog=ToDoListWeb20171212_db;User Id=lucanthony@todolistweb20171212db;Password=t0pS3cr3t!</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
