@@ -1,50 +1,50 @@
 ﻿@model IEnumerable<ToDoListWeb.Models.ToDoList>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 <div class="pull-right">
-    <button class ="btn btn-success" data-bind="click: addList">Add New List</button>
+	<button class="btn btn-success" data-bind="click: addList">Add New List</button>
 </div>
 <h2>Index</h2>
 
 <div class="row">
-    <!-- ko foreach: lists -->
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title" data-bind="text: name"></h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-condensed">
+	<!-- ko foreach: lists -->
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title" data-bind="text: name"></h2>
+			</div>
+			<div class="panel-body">
+				<table class="table table-condensed">
 
-                    <tbody data-bind="foreach: items">
-                        <tr>
-                            <td style="width: 20px;">
-                                <input type="checkbox" data-bind="checked: isDone" />
-                            </td>
-                            <td data-bind="css: {completed: isDone}">
-                                <div data-bind ="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
-                                <input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                <button data-bind="click: addItem">Add</button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </div>
-    <!-- /ko -->
+					<tbody data-bind="foreach: items">
+						<tr>
+							<td style="width: 20px;">
+								<input type="checkbox" data-bind="checked: isDone" />
+							</td>
+							<td data-bind="css: {completed: isDone}">
+								<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
+								<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}" />
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2">
+								<button data-bind="click: addItem">Add</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- /ko -->
 </div>
 @section Scripts
-{
-    <script type="text/javascript">
+	{
+	<script type="text/javascript">
         function TodoItem(host, id) {
             this.host = host;
             this.todoListId = host.id;
@@ -158,5 +158,5 @@
         }
 
         ko.applyBindings(new ViewModel());
-    </script>
+	</script>
 }
