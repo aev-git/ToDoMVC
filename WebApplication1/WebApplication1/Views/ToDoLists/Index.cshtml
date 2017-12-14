@@ -1,72 +1,72 @@
 ﻿@model IEnumerable<ToDoListWeb.Models.ToDoList>
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
 <div class="pull-right">
-	<button class="btn btn-success" data-bind="click: addList">Add New List</button>
+    <button class="btn btn-success" data-bind="click: addList">Add New List</button>
 </div>
-<h2>Index</h2>
+<h2>To Do Lists</h2>
 
 <div class="row">
-	<div data-bind="visible: lists().length == 0">
-		<div class="jumbotron">
-			<h1 class="lead">
-				No Todos
-				<span class="glyphicon glyphicon-thumbs-up"></span>
-			</h1>
-			<p>
-				You have no todo lists.
-			</p>
-			<p>
-				<button class="btn btn-primary btn-lg" data-bind="click: addList">
-					<span class="glyphicon glyphicon-plus"></span> Create One!
-				</button>
-			</p>
-		</div>
-	</div>
-	<!-- ko foreach: lists -->
-	<div class="col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<button data-bind="click: $parent.removeList" class="pull-right btn btn-xs btn-link">
-					<span class="glyphicon glyphicon-remove"></span>
-				</button>
-				<h2 class="panel-title" data-bind="text: name"></h2>
-			</div>
-			<div class="panel-body">
-				<table class="table table-condensed">
+    <div data-bind="visible: lists().length == 0">
+        <div class="jumbotron">
+            <h1 class="lead">
+                No Todos
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+            </h1>
+            <p>
+                You have no todo lists.
+            </p>
+            <p>
+                <button class="btn btn-primary btn-lg" data-bind="click: addList">
+                    <span class="glyphicon glyphicon-plus"></span> Create One!
+                </button>
+            </p>
+        </div>
+    </div>
+    <!-- ko foreach: lists -->
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button data-bind="click: $parent.removeList" class="pull-right btn btn-xs btn-link">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <h2 class="panel-title" data-bind="text: name"></h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
 
-					<tbody data-bind="foreach: items">
-					<tr>
-						<td style="width: 20px;">
-							<input type="checkbox" data-bind="checked: isDone"/>
-						</td>
-						<td data-bind="css: {completed: isDone}">
-							<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-							<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
-							<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}"/>
-						</td>
-					</tr>
-					</tbody>
-					<tfoot>
-					<tr>
-						<td colspan="2">
-							<button data-bind="click: addItem">Add</button>
-						</td>
-					</tr>
-					</tfoot>
-				</table>
-			</div>
-		</div>
-	</div>
-	<!-- /ko -->
+                    <tbody data-bind="foreach: items">
+                        <tr>
+                            <td style="width: 20px;">
+                                <input type="checkbox" data-bind="checked: isDone" />
+                            </td>
+                            <td data-bind="css: {completed: isDone}">
+                                <button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
+                                <input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <button data-bind="click: addItem">Add</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
 </div>
 @section Scripts
-{
-	<script type="text/javascript">
+    {
+    <script type="text/javascript">
 		function TodoItem(host, id) {
 			var self = this;
 			this.host = host;
@@ -109,11 +109,23 @@
 
 			this.removeItem = function(todoItem) {
 				if (confirm("Are you sure you want to remove this item?")) {
-					self.items.remove(todoItem);
+                    
+				    $.ajax({
+				        type: "post",
+				        dataType: "JSON",
+				        url: '@Url.Action("Delete", "TodoItems")',
+				        data: {
+				            id: item.id
+				           },
+				        success: function(response) {
+                            self.items.remove(todoItem);
+				        }
+				    });
 				}
 				return;
 
-							};
+
+				};
 			this.postData = function(item) {
 				if (self.host.ignore)
 					return;
@@ -194,5 +206,5 @@
 		}
 
 		ko.applyBindings(new ViewModel());
-	</script>
+    </script>
 }
