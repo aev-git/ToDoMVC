@@ -8,19 +8,19 @@ namespace ToDoListWeb.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "ToDoLists");
         }
-
+            
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "ToDo List Web App";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Anthony Villa";
 
             return View();
         }
