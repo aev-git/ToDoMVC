@@ -109,24 +109,28 @@
 			};
 
 			this.removeItem = function(todoItem) {
-				if (confirm("Are you sure you want to remove this item?")) {
+				if (!confirm("Are you sure you want to remove this item?"))
+					return;
 
-				    $.ajax({
-				        type: "post",
-				        dataType: "JSON",
-				        url: '@Url.Action("Delete", "TodoItems")',
-				        data: {
-				            id: item.id
-				           },
-				        success: function(response) {
-                            self.items.remove(todoItem);
-				        }
-				    });
-				}
-				return;
+				self.items.remove(todoItem);
 
+				debugger;
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Delete", "TodoItems")',
+					data: { id: todoItem.id },
+					success: function (response) {
+						// nothing to do we've already removed the item
+						console.log(response);
+					},
+					error: function (xhr, err, reason) {
+						self.items.push(todoItem); // add the item back
+						alert("Oops, there was an error: " + reason);
+					}
+				});
+			};
 
-				};
 			this.postData = function(item) {
 				if (self.host.ignore)
 					return;
