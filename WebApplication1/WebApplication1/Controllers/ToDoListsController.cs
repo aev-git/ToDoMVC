@@ -130,7 +130,7 @@ namespace ToDoListWeb.Controllers
 
         // POST: ToDoLists/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
 	        var todoList = await _repository.DeleteToDoList(id);
