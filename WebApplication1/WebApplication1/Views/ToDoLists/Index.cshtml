@@ -163,15 +163,17 @@
 				}
 				return;
 			};
-			this.addList = function() {
+			this.addList = function () {
+
 				var name = prompt("Enter a name for the list: ");
 				if (name.length === 0)
 					return;
 
-				var newList = new TodoList(this, 0);
+				var newList = new TodoList(self, 0);
 				newList.name(name);
-				this.postData(newList);
-				this.lists.push(newList);
+				self.postData(newList);
+				self.lists.push(newList);
+
 			};
 			this.postData = function(list) {
 				if (list.host.ignore)
