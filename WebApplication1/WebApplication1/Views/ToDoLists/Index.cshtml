@@ -157,11 +157,26 @@
 			var self = this;
 			this.ignore = true;
 			this.lists = ko.observableArray([]);
-			this.removeList = function(todoList) {
-				if (confirm("Are you sure you want to remove this list?")) {
-					self.lists.remove(todoList);
-				}
-				return;
+			this.removeList = function (todoList) {
+
+				if (!confirm("Are you sure you want to remove this list?"))
+					return;
+
+				self.lists.remove(todoList);
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Delete", "TodoLists")',
+					data: { id: todoList.id },
+					success: function (response) {
+						// nothing to do we've already removed the item
+						console.log(response);
+					},
+					error: function (xhr, err, reason) {
+						self.list.push(todoList); // add the list back
+						alert("Oops, there was an error: " + reason);
+					}
+				});
 			};
 			this.addList = function () {
 
