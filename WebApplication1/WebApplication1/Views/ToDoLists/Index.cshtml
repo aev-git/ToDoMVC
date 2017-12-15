@@ -38,25 +38,25 @@
 				<table class="table table-condensed">
 
 					<tbody data-bind="foreach: items">
-						<tr>
-							<td style="width: 20px;">
-								<input type="checkbox" data-bind="checked: isDone" />
-							</td>
-							<td data-bind="css: {completed: isDone}">
-								<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
-								<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
-								<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}" />
-							</td>
-						</tr>
+					<tr>
+						<td style="width: 20px;">
+							<input type="checkbox" data-bind="checked: isDone" />
+						</td>
+						<td data-bind="css: {completed: isDone}">
+							<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<div data-bind="text: memo, visible: !showTextbox(), click: editModeOn"></div>
+							<input class="form-control" data-bind="value:memo, visible: showTextbox, event: {blur: editModeOff}" />
+						</td>
+					</tr>
 					</tbody>
 					<tfoot>
-						<tr>
-							<td colspan="2">
-								<button data-bind="click: addItem">Add</button>
-							</td>
-						</tr>
+					<tr>
+						<td colspan="2">
+							<button data-bind="click: addItem">Add todo item</button>
+						</td>
+					</tr>
 					</tfoot>
 				</table>
 			</div>
@@ -64,6 +64,7 @@
 	</div>
 	<!-- /ko -->
 </div>
+
 @section Scripts
 	{
 	<script type="text/javascript">
@@ -72,10 +73,6 @@
 			this.host = host;
 			this.todoListId = host.id;
 			this.id = id;
-			this.isEditMode = ko.observable(false);
-			this.toggleEditMode = function() {
-				self.isEditMode(!self.isEditMode());
-			};
 			this.memo = ko.observable();
 			this.isDone = ko.observable();
 
@@ -88,6 +85,10 @@
 				self.host.postData(self);
 				self.editModeOff();
 			});
+			this.isEditMode = ko.observable(false);
+			this.editModeOn = function() {
+				self.isEditMode(true);
+			};
 			this.editModeOff = function() {
 				self.isEditMode(false);
 			};
@@ -197,8 +198,6 @@
 					@:item.isDone(@item.IsDone.ToString().ToLower());
 
 					@:list.items.push(item);
-
-
 				}
 				@:this.lists.push(list);
 			}
