@@ -141,13 +141,14 @@ namespace ToDoListWeb.Controllers
 
         // POST: ToDoItems/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var toDoItem = await _context.ToDoItem.SingleOrDefaultAsync(m => m.Id == id);
             _context.ToDoItem.Remove(toDoItem);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+	        return Ok();
+            //return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -165,6 +166,7 @@ namespace ToDoListWeb.Controllers
             await _context.SaveChangesAsync();
             return Ok(item.Id);
         }
+
         private bool ToDoItemExists(int id)
         {
             return _context.ToDoItem.Any(e => e.Id == id);

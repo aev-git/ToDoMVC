@@ -6,14 +6,14 @@
 <div class="pull-right">
 	<button class="btn btn-success" data-bind="click: addList">Add New List</button>
 </div>
+
 <h2>To Do Lists</h2>
 
 <div class="row">
 	<div data-bind="visible: lists().length == 0">
 		<div class="jumbotron">
 			<h1 class="lead">
-				No Todos
-				<span class="glyphicon glyphicon-thumbs-up"></span>
+				No Todos <span class="glyphicon glyphicon-thumbs-up"></span>
 			</h1>
 			<p>
 				You have no todo lists.
@@ -38,25 +38,25 @@
 				<table class="table table-condensed">
 
 					<tbody data-bind="foreach: items">
-						<tr>
-							<td style="width: 20px;">
-								<input type="checkbox" data-bind="checked: isDone" />
-							</td>
-							<td data-bind="css: {completed: isDone}">
-								<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
-								<div data-bind="text:memo, visible:!showTextbox(), click:toggleEditMode"></div>
-								<input class="form-control" data-bind="value:memo, visible: showTextbox, event:{blur: editModeOff}" />
-							</td>
-						</tr>
+					<tr>
+						<td style="width: 20px;">
+							<input type="checkbox" data-bind="checked: isDone" />
+						</td>
+						<td data-bind="css: {completed: isDone}">
+							<button data-bind="click: $parent.removeItem" class="btn btn-link btn-xs pull-right">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<div data-bind="text: memo, visible: !showTextbox(), click: editModeOn"></div>
+							<input style="width: 90%" class="form-control" data-bind="value:memo, visible: showTextbox, event: {blur: editModeOff}" />
+						</td>
+					</tr>
 					</tbody>
 					<tfoot>
-						<tr>
-							<td colspan="2">
-								<button data-bind="click: addItem">Add</button>
-							</td>
-						</tr>
+					<tr>
+						<td colspan="2">
+							<button data-bind="click: addItem">Add todo item</button>
+						</td>
+					</tr>
 					</tfoot>
 				</table>
 			</div>
@@ -64,18 +64,15 @@
 	</div>
 	<!-- /ko -->
 </div>
+
 @section Scripts
-	{
+{
 	<script type="text/javascript">
 		function TodoItem(host, id) {
 			var self = this;
 			this.host = host;
 			this.todoListId = host.id;
 			this.id = id;
-			this.isEditMode = ko.observable(false);
-			this.toggleEditMode = function() {
-				self.isEditMode(!self.isEditMode());
-			};
 			this.memo = ko.observable();
 			this.isDone = ko.observable();
 
@@ -88,6 +85,10 @@
 				self.host.postData(self);
 				self.editModeOff();
 			});
+			this.isEditMode = ko.observable(false);
+			this.editModeOn = function() {
+				self.isEditMode(true);
+			};
 			this.editModeOff = function() {
 				self.isEditMode(false);
 			};
@@ -108,24 +109,28 @@
 			};
 
 			this.removeItem = function(todoItem) {
-				if (confirm("Are you sure you want to remove this item?")) {
+				if (!confirm("Are you sure you want to remove this item?"))
+					return;
 
-				    $.ajax({
-				        type: "post",
-				        dataType: "JSON",
-				        url: '@Url.Action("Delete", "TodoItems")',
-				        data: {
-				            id: item.id
-				           },
-				        success: function(response) {
-                            self.items.remove(todoItem);
-				        }
-				    });
-				}
-				return;
+				self.items.remove(todoItem);
 
+				debugger;
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Delete", "TodoItems")',
+					data: { id: todoItem.id },
+					success: function (response) {
+						// nothing to do we've already removed the item
+						console.log(response);
+					},
+					error: function (xhr, err, reason) {
+						self.items.push(todoItem); // add the item back
+						alert("Oops, there was an error: " + reason);
+					}
+				});
+			};
 
-				};
 			this.postData = function(item) {
 				if (self.host.ignore)
 					return;
@@ -152,21 +157,38 @@
 			var self = this;
 			this.ignore = true;
 			this.lists = ko.observableArray([]);
-			this.removeList = function(todoList) {
-				if (confirm("Are you sure you want to remove this list?")) {
-					self.lists.remove(todoList);
-				}
-				return;
+			this.removeList = function (todoList) {
+
+				if (!confirm("Are you sure you want to remove this list?"))
+					return;
+
+				self.lists.remove(todoList);
+				$.ajax({
+					type: "post",
+					dataType: "JSON",
+					url: '@Url.Action("Delete", "TodoLists")',
+					data: { id: todoList.id },
+					success: function (response) {
+						// nothing to do we've already removed the item
+						console.log(response);
+					},
+					error: function (xhr, err, reason) {
+						self.list.push(todoList); // add the list back
+						alert("Oops, there was an error: " + reason);
+					}
+				});
 			};
-			this.addList = function() {
+			this.addList = function () {
+
 				var name = prompt("Enter a name for the list: ");
 				if (name.length === 0)
 					return;
 
-				var newList = new TodoList(this, 0);
+				var newList = new TodoList(self, 0);
 				newList.name(name);
-				this.postData(newList);
-				this.lists.push(newList);
+				self.postData(newList);
+				self.lists.push(newList);
+
 			};
 			this.postData = function(list) {
 				if (list.host.ignore)
@@ -197,14 +219,13 @@
 					@:item.isDone(@item.IsDone.ToString().ToLower());
 
 					@:list.items.push(item);
-
-
 				}
-				@:this.lists.push(list);
+				@:self.lists.push(list);
 			}
 			this.ignore = false;
 		}
 
 		ko.applyBindings(new ViewModel());
+
 	</script>
 }
