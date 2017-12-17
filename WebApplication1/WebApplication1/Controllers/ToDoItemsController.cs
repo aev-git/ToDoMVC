@@ -147,7 +147,7 @@ namespace ToDoListWeb.Controllers
             var toDoItem = await _context.ToDoItem.SingleOrDefaultAsync(m => m.Id == id);
             _context.ToDoItem.Remove(toDoItem);
             await _context.SaveChangesAsync();
-	        return Ok();
+	        return Ok(id);
             //return RedirectToAction(nameof(Index));
         }
 
